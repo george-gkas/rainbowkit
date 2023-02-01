@@ -55,9 +55,9 @@ export const trustWallet = ({
 }: TrustWalletOptions): Wallet => {
   const isTrustWalletInjected = Boolean(getTrustWalletInjectedProvider());
   const shouldUseWalletConnect = !isTrustWalletInjected;
-  console.log('window', Boolean(window))
+  console.log('window', typeof window !== 'undefined');
   console.log('isTrustWalletInjected', isTrustWalletInjected);
-  window && window?.addEventListener('trustwallet#initialized', () => console.log('trsutwallet injected'))
+  typeof window !== 'undefined' && window?.addEventListener('trustwallet#initialized', () => console.log('trsutwallet injected'))
 
   return {
     id: 'trust',
