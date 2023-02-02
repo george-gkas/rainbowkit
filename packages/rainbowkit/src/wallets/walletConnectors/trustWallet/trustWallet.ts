@@ -17,10 +17,8 @@ export interface TrustWalletOptions {
 
 function getTrustWalletInjectedProvider(): Window['ethereum'] {
   const isTrustWallet = (ethereum: NonNullable<Window['ethereum']>) => {
-    console.log('ethereum', ethereum)
     // Identify if Trust Wallet injected provider is present.
     const trustWallet = !!ethereum.isTrust;
-    console.log('trustWallet', trustWallet)
 
     return trustWallet;
   };
@@ -28,13 +26,11 @@ function getTrustWalletInjectedProvider(): Window['ethereum'] {
   const injectedProviderExist =
     typeof window !== 'undefined' && typeof window.ethereum !== 'undefined';
 
-  console.log('injectedProviderExist', injectedProviderExist);
   // No injected providers exist.
   if (!injectedProviderExist) {
     return;
   }
 
-  console.log('window.trustwallet', window['trustwallet']);
   // In some cases injected providers can replace window.ethereum
   // without updating the providers array. In those instances the Trust Wallet
   // can be installed and its provider instance can be retrieved by
@@ -43,17 +39,14 @@ function getTrustWalletInjectedProvider(): Window['ethereum'] {
     return window['trustwallet'];
   }
 
-  console.log('isTrustWallet:window.ethereum', isTrustWallet(window.ethereum!));
   // Trust Wallet was injected into window.ethereum.
   if (isTrustWallet(window.ethereum!)) {
     return window.ethereum;
   }
 
-  console.log('window.ethereum.providers', window.ethereum?.providers);
   // Trust Wallet provider might be replaced by another
   // injected provider, check the providers array.
   if (window.ethereum?.providers) {
-    console.log('isTrustWallet:window.ethereum.providers', window.ethereum.providers.find(isTrustWallet));
     return window.ethereum.providers.find(isTrustWallet);
   }
 }
@@ -64,9 +57,6 @@ export const trustWallet = ({
 }: TrustWalletOptions): Wallet => {
   const isTrustWalletInjected = Boolean(getTrustWalletInjectedProvider());
   const shouldUseWalletConnect = !isTrustWalletInjected;
-  console.log('window', typeof window !== 'undefined' && typeof window.ethereum !== 'undefined');
-  console.log('isTrustWalletInjected', isTrustWalletInjected);
-  typeof window !== 'undefined' && window?.addEventListener('trustwallet#initialized', () => console.log('trsutwallet injected'))
 
   return {
     id: 'trust',
